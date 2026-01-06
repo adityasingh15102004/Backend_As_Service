@@ -8,26 +8,19 @@ import com.jobhunt.saas.entity.SubscriptionStatus;
 import com.jobhunt.saas.repository.PlanRepo;
 import com.jobhunt.saas.repository.SubscriptionRepo;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class SubscriptionService {
 
     private final SubscriptionRepo subscriptionRepo;
     private  final PlanRepo planRepo;
     private final AuthContext authContext;
 
-    @Autowired            //Dependency Injection
-    public SubscriptionService(SubscriptionRepo subscriptionRepo,
-                               PlanRepo planRepo,
-                               AuthContext authContext) {
-        this.subscriptionRepo = subscriptionRepo;
-        this.planRepo = planRepo;
-        this.authContext = authContext;
-    }
 
     public Long getCurrentUserId() {
         return authContext.getCurrentUserId();
@@ -45,7 +38,6 @@ public class SubscriptionService {
     public SubscriptionResponse subscribe(Long planId)
     {
         Long userId = getCurrentUserId();
-        LocalDateTime now = LocalDateTime.now();
 
         // Check for User Has already Active Subscription
         subscriptionRepo.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE)
@@ -96,6 +88,7 @@ public class SubscriptionService {
 
     //Service -2 Cancel Subscription
 
+    @Transactional
     public void cancelSubscription()
     {
         Long userId =getCurrentUserId();
@@ -106,11 +99,13 @@ public class SubscriptionService {
 
         //Cancel Subscription & Save in DB
         subscription.setStatus(SubscriptionStatus.CANCELLED);
-        subscriptionRepo.save(subscription);
+       // subscriptionRepo.save(subscription);
     }
+
     public boolean isExpired(Subscription subscription) {
         return  subscription.getEndDate().isBefore(LocalDateTime.now());
     }
+
 //Service -3  get Current User Active Subscription
 
     public Subscription getActiveSubscriptionForUser(Long userId) {
@@ -130,7 +125,6 @@ public class SubscriptionService {
     }
 
     //Service  get Current User Active Subscription
-
     public Subscription getCurrentUserActiveSubscription() {
         return getActiveSubscriptionForUser(getCurrentUserId());
     }

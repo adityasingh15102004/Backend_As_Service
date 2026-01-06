@@ -1,5 +1,6 @@
 package com.jobhunt.saas.service;
 
+import com.jobhunt.saas.annotations.RequireActiveSubscription;
 import com.jobhunt.saas.entity.Project;
 import com.jobhunt.saas.entity.ProjectStatus;
 import com.jobhunt.saas.entity.Subscription;
@@ -17,9 +18,8 @@ public class ProjectService {
     private SubscriptionService subscriptionService;
 
 
+    @RequireActiveSubscription
     public void createProject(String projectName){
-
-        subscriptionService.ensureActiveSubscription();
 
       Long ownerUserId=subscriptionService.getCurrentUserId();
 
