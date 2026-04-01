@@ -39,20 +39,17 @@ spring:
     type: simple
   
   mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
-    port: ${MAIL_PORT:465}
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    host: smtp.resend.com
+    port: 465
+    username: resend
+    password: ${RESEND_API_KEY}
+    from: ${MAIL_FROM:onboarding@resend.dev}
     properties:
       mail.smtp.auth: true
       mail.smtp.ssl.enable: true
-      mail.smtp.starttls.enable: false
-      mail.smtp.socketFactory.port: 465
-      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
       mail.smtp.connectiontimeout: 10000
       mail.smtp.timeout: 10000
       mail.smtp.writetimeout: 10000
-      mail.smtp.ssl.trust: smtp.gmail.com
 
 logging:
   level:
