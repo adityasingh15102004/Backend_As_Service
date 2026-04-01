@@ -23,7 +23,7 @@ server:
 
 spring:
   datasource:
-    url: ${DATABASE_URL:${MYSQL_URL}}
+    url: ${MYSQL_URL}
     username: ${DATABASE_USER_NAME:${MYSQLUSER:root}}
     password: ${DATABASE_USER_PASSWORD:${MYSQLPASSWORD:}}
   
