@@ -90,7 +90,7 @@ gemini:
     key: ${GEMINI_API_KEY:placeholder_key}
 
 app:
-  base-url: ${APP_BASE_URL:http://localhost:8080}
+  base-url: ${APP_BASE_URL:https://backendasservice-production.up.railway.app/}
 
 email:
   token:
