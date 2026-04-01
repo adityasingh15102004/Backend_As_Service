@@ -23,9 +23,10 @@ server:
 
 spring:
   datasource:
-    url: ${MYSQL_URL}
-    username: ${DATABASE_USER_NAME:${MYSQLUSER:root}}
-    password: ${DATABASE_USER_PASSWORD:${MYSQLPASSWORD:}}
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
