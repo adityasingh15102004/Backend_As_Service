@@ -46,9 +46,11 @@ public class EmailService {
                 log.info("Email sent successfully via Resend API. Response: {}", response.body());
             } else {
                 log.error("Failed to send email via Resend API. Status: {}, Body: {}", response.statusCode(), response.body());
+                throw new RuntimeException("Email service error: " + response.body());
             }
         } catch (Exception e) {
             log.error("Error occurred while sending email via Resend API", e);
+            throw new RuntimeException("Could not send email", e);
         }
     }
 }
