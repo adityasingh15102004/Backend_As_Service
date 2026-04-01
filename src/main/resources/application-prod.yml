@@ -82,3 +82,14 @@ application:
   cors:
 
     default-origins: ${CORS_DEFAULT_ORIGINS:https://saas-frontend2-0.vercel.app/}
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+
+app:
+  base-url: ${APP_BASE_URL}
+
+email:
+  token:
+    expiration-hours: ${EMAIL_TOKEN_EXPIRATION:24}

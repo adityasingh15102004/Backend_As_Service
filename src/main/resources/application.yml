@@ -5,7 +5,7 @@ server:
 #   config:
 #     import: optional:file:.env.dev[.properties]
   application:
-    name: saas
+    name: Backend_As_Service
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
@@ -55,3 +55,14 @@ application:
       expiration: ${JWT_EXPIRATION:3600000}
   cors:
     default-origins: ${CORS_DEFAULT_ORIGINS:http://localhost:3000,http://localhost:8080}
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY:}
+
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+
+email:
+  token:
+    expiration-hours: ${EMAIL_TOKEN_EXPIRATION:24}
