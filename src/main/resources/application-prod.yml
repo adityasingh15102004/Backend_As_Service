@@ -23,9 +23,9 @@ server:
 
 spring:
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USER_NAME}
-    password: ${DATABASE_USER_PASSWORD}
+    url: ${DATABASE_URL:${MYSQL_URL}}
+    username: ${DATABASE_USER_NAME:${MYSQLUSER:root}}
+    password: ${DATABASE_USER_PASSWORD:${MYSQLPASSWORD:}}
   
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
