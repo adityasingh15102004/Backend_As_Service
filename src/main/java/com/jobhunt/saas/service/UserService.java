@@ -55,23 +55,28 @@ public class UserService {
             return planRepo.save(newPlan);
         });
 
-        // 2. Create Tenant
-        Tenant tenant = new Tenant();
-        tenant.setName(registrationRequest.getTenantName());
-        tenant = tenantRepo.save(tenant);
-        
-
+        // 2. Create Tenant (Check if exists first)
+        String tenantName = registrationRequest.getTenantName();
+        Tenant tenant = tenantRepo.findByName(tenantName).orElseGet(() -> {
+            log.info("Creating new tenant: {}", tenantName);
+            Tenant newTenant = new Tenant();
+            newTenant.setName(tenantName);
+            return tenantRepo.save(newTenant);
+        });
 
         // 2.5 Create Engine Subscription
         TenantSubscription ts = new TenantSubscription();
         ts.setTenant(tenant);
         ts.setPlan(defaultPlan);
-        //ts.setStatus(SubscriptionStatus.ACTIVE);
-        ts.setStartDate(LocalDateTime.now());
-        ts.setExpireDate(LocalDateTime.now().plusDays(defaultPlan.getDurationInDays()));
+        ts.setStatus(SubscriptionStatus.ACTIVE); // Explicitly set status to be safe
+        ts.setStartDate(java.time.LocalDateTime.now());
+        ts.setExpireDate(java.time.LocalDateTime.now().plusDays(defaultPlan.getDurationInDays()));
+        
+        log.info("Saving subscription for tenant: {}", tenantName);
         tenantSubscriptionRepo.save(ts);
 
         if (userRepo.existsByEmail(registrationRequest.getEmail())) {
+            log.warn("Email already registered: {}", registrationRequest.getEmail());
             throw new RuntimeException("Email already registered");
         }
 

@@ -9,6 +9,9 @@ public interface TenantRepo extends JpaRepository<Tenant, Long> {
     // Get tenant by ID
     Optional<Tenant> findById(Long id);
 
+    // Get tenant by name
+    Optional<Tenant> findByName(String name);
+
     // Get tenant by API Keys
     Optional<Tenant> findByClientIdAndClientSecret(String clientId, String clientSecret);
 }
