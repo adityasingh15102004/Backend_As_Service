@@ -39,10 +39,10 @@ spring:
     type: simple
   
   mail:
-    host: ${MAIL_HOST}
-    port: ${MAIL_PORT}
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:placeholder@gmail.com}
+    password: ${MAIL_PASSWORD:placeholder_password}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
@@ -79,7 +79,7 @@ management:
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET}
+      secret-key: ${JWT_SECRET:vWv7z8BfG9pQ2mR5kX3nJ8uS1tV4yZ6aE0bC9dX2fG5hJ8kL1mN4pQ7rS0tV3yZ6}
       expiration: ${JWT_EXPIRATION:86400000}
   cors:
 
@@ -87,10 +87,10 @@ application:
 
 gemini:
   api:
-    key: ${GEMINI_API_KEY}
+    key: ${GEMINI_API_KEY:placeholder_key}
 
 app:
-  base-url: ${APP_BASE_URL}
+  base-url: ${APP_BASE_URL:http://localhost:8080}
 
 email:
   token:
