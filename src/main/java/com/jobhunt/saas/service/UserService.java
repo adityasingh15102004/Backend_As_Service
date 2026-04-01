@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -165,5 +166,20 @@ public class UserService {
         }
 
         return userRepo.findByEmailAndTenant_Id(email, tenantId);
+    }
+
+    // Temporary method: bulk-verify all existing unverified users
+    public int verifyAllExistingUsers() {
+        List<Users> allUsers = userRepo.findAll();
+        int count = 0;
+        for (Users user : allUsers) {
+            if (!user.isEmailVerified()) {
+                user.setEmailVerified(true);
+                userRepo.save(user);
+                log.info("Retroactively verified user: {}", user.getEmail());
+                count++;
+            }
+        }
+        return count;
     }
 }

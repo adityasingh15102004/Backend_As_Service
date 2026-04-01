@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -64,5 +65,13 @@ public class AuthControllerInfra {
                         LocalDateTime.now()
                 );
          return ResponseEntity.ok(body);
+    }
+
+    // Temporary admin endpoint to fix existing unverified users
+    @GetMapping("/admin/verify-all-users")
+    public ResponseEntity<AppResponse<String>> verifyAllUsers(){
+        int count = userService.verifyAllExistingUsers();
+        String msg = "Verified " + count + " users successfully.";
+        return ResponseEntity.ok(new AppResponse<>(msg, null, 200, LocalDateTime.now()));
     }
 }
