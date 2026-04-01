@@ -27,17 +27,30 @@ public class AuthControllerInfra {
 
     @PostMapping("/register")
     public ResponseEntity<AppResponse<RegistrationResponse>> regUser(@Valid @RequestBody RegistrationRequest registrationRequest){
-      RegistrationResponse response= userService.addUser(registrationRequest);
-      AppResponse<RegistrationResponse> appResponse =
-              new AppResponse<>("Success",response,200, LocalDateTime.now());
-      return ResponseEntity.ok(appResponse);
+        try {
+            RegistrationResponse response = userService.addUser(registrationRequest);
+            AppResponse<RegistrationResponse> appResponse =
+                    new AppResponse<>("Success", response, 200, LocalDateTime.now());
+            return ResponseEntity.ok(appResponse);
+        } catch (RuntimeException e) {
+            AppResponse<RegistrationResponse> errorResponse =
+                    new AppResponse<>(e.getMessage(), null, 400, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
     }
+
     @PostMapping("/login")
     public ResponseEntity<AppResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest){
-        LoginResponse response= authService.login(loginRequest);
-        AppResponse<LoginResponse> body=
-                new AppResponse<>("Success",response,200, LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.OK).body(body);
+        try {
+            LoginResponse response = authService.login(loginRequest);
+            AppResponse<LoginResponse> body =
+                    new AppResponse<>("Success", response, 200, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.OK).body(body);
+        } catch (RuntimeException e) {
+            AppResponse<LoginResponse> errorResponse =
+                    new AppResponse<>(e.getMessage(), null, 401, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        }
     }
 
     @GetMapping("/verify-email")

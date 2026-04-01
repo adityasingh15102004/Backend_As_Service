@@ -21,10 +21,14 @@ public class JWTService {
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
 
-    public Key getSecretKey()
-    {
-        byte[] encoded = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(encoded);
+    public Key getSecretKey() {
+        try {
+            byte[] encoded = Decoders.BASE64.decode(secretKey);
+            return Keys.hmacShaKeyFor(encoded);
+        } catch (Exception e) {
+            // Fallback for non-base64 secrets
+            return Keys.hmacShaKeyFor(secretKey.getBytes());
+        }
     }
 
     public String generateToken(String email, Long tenantId)

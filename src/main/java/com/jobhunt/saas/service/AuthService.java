@@ -32,17 +32,23 @@ public class AuthService {
         String email = loginRequest.getEmail();
 
         if (!userRepo.existsByEmail(email)) {
+            log.warn("Login failed: Email {} does not exist", email);
             throw new InvalidCredentialException("Email not Exist Please Register");
         }
         Users user = userRepo.findByEmail(email)
-                .orElseThrow(() -> new InvalidCredentialException("User not found"));
+                .orElseThrow(() -> {
+                    log.warn("Login failed: User not found for email {}", email);
+                    return new InvalidCredentialException("User not found");
+                });
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            log.warn("Login failed: Invalid password for email {}", email);
             throw new InvalidCredentialException("Invalid credentials. Please try again.");
         }
 
         // Check if email is verified
         if (!user.isEmailVerified()) {
+            log.warn("Login failed: Email {} not verified", email);
             throw new InvalidCredentialException("Email not verified. Please check your inbox or resend the verification email.");
         }
 
