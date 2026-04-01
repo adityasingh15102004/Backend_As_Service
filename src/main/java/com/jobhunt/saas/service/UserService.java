@@ -42,9 +42,18 @@ public class UserService {
 
     public RegistrationResponse addUser(RegistrationRequest registrationRequest) {
 
-        // 1. Fetch default FREE/TRIAL plan
-        Plan defaultPlan = planRepo.findByName("FREE").orElseThrow(
-                () -> new RuntimeException("Plan Not Found"));
+        // 1. Fetch or Create default FREE plan
+        Plan defaultPlan = planRepo.findByName("FREE").orElseGet(() -> {
+            log.info("Default FREE plan not found. Creating it now...");
+            Plan newPlan = new Plan();
+            newPlan.setName("FREE");
+            newPlan.setPrice(java.math.BigDecimal.ZERO);
+            newPlan.setDurationInDays(30);
+            newPlan.setActive(true);
+            newPlan.setCreatedAt(java.time.LocalDateTime.now());
+            newPlan.setUpdatedAt(java.time.LocalDateTime.now());
+            return planRepo.save(newPlan);
+        });
 
         // 2. Create Tenant
         Tenant tenant = new Tenant();
