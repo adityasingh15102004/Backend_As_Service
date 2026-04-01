@@ -73,12 +73,12 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
         user.setRole(Role.ROLE_TENANT_ADMIN);
         user.setTenant(tenant);
-        user.setEmailVerified(false);  // Mark as unverified
+        user.setEmailVerified(true);  // Auto-verify for now to skip the email headache
 
         // 4. Save user
         userRepo.save(user);
 
-        // 5. Generate and save verification token
+        // 5. Generate and save verification token (Kept for future use, but not sent)
         String token = UUID.randomUUID().toString();
         LocalDateTime expiryTime = LocalDateTime.now().plusHours(tokenExpirationHours);
         
@@ -88,7 +88,9 @@ public class UserService {
         verificationToken.setExpiryTime(expiryTime);
         emailTokenRepo.save(verificationToken);
 
-        // 6. Send verification email
+        // 6. Skip sending verification email for now
+        log.info("Email verification skipped. User is auto-verified: {}", registrationRequest.getEmail());
+        /*
         try {
             String verifyLink = baseUrl + "/api/auth/verify-email?token=" + token;
             emailService.sendEmail(
@@ -101,6 +103,7 @@ public class UserService {
             log.error("Failed to send verification email to: {}", registrationRequest.getEmail(), e);
             throw new RuntimeException("Failed to send verification email");
         }
+        */
 
         // 7. Return response
         return new RegistrationResponse(user.getUsername(), user.getEmail());
